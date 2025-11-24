@@ -1,0 +1,121 @@
+﻿@model List<Portfolio_1_CRUD.Models.StudentInformation>
+
+@{
+    ViewData["Title"] = "Student Listing";
+}
+
+<h2>Students</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New Student</a>
+
+    <form class="d-flex" method="get" asp-action="Index">
+        <input type="text"
+               name="studentName"
+               class="form-control me-2"
+               placeholder="Search by name..."
+               value="@ViewBag.studentName" />
+        <button class="btn btn-outline-secondary" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Courses</th>
+            <th style="width:150px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || !Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center py-4">
+                    <em>No students found.</em>
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Name</td>
+                    <td>@s.Age</td>
+                    <td>
+                        @if (s.StudentCourses.Any())
+                        {
+                            var courses = s.StudentCourses.Select(sc => sc.Course.Name).ToList();
+                            <span>@courses[0]</span>
+
+                            @if (courses.Count > 1)
+                            {
+                                <a href="#" class="ms-2 toggle-courses" data-target="#courses-@s.Id">
+                                    <i class="bi bi-chevron-down"></i>
+                                </a>
+                                <ul id="courses-@s.Id" class="list-unstyled collapse">
+                                    @for (int i = 1; i < courses.Count; i++)
+                                    {
+                                        <li>@courses[i]</li>
+                                    }
+                                </ul>
+                            }
+                        }
+                        else
+                        {
+                            <span><em>No courses</em></span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-warning" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@s.Id" class="btn btn-sm btn-danger" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (ViewBag.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center mt-3">
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-studentName="@ViewBag.studentName" asp-route-page="@(ViewBag.CurrentPage - 1)">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-studentName="@ViewBag.studentName" asp-route-page="@i">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-studentName="@ViewBag.studentName" asp-route-page="@(ViewBag.CurrentPage + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.toggle-courses').click(function (e) {
+                e.preventDefault();
+                var targetId = $(this).data('target');
+                $(targetId).collapse('toggle');
+                $(this).find('i').toggleClass('bi-chevron-down bi-chevron-up');
+            });
+        });
+    </script>
+}

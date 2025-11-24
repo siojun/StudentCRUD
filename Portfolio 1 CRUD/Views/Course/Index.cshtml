@@ -1,0 +1,60 @@
+﻿@model List<Portfolio_1_CRUD.Models.CourseInformation>
+
+@{
+    ViewData["Title"] = "Courses Listing";
+}
+
+<h2>Courses</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New Course</a>
+
+    <form class="d-flex" method="get" asp-action="Index">
+        <input type="text"
+               name="courseName"
+               class="form-control me-2"
+               placeholder="Search by name..."
+               value="@ViewBag.courseName" />
+        <button class="btn btn-outline-secondary" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Credits</th>
+            <th style="width:150px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model == null || !Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center py-4">
+                    <em>No courses found.</em>
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Name</td>
+                    <td>@c.Credits</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-warning" title="Edit">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@c.Id" class="btn btn-sm btn-danger" title="Delete">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

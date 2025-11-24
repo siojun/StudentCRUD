@@ -1,0 +1,33 @@
+﻿@model Portfolio_1_CRUD.Models.StudentInformation
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<h2>Delete Student</h2>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>Age: @Model.Age</p>
+
+    @if (Model.StudentCourses.Any())
+    {
+        <p>Courses:</p>
+        <ul>
+            @foreach (var sc in Model.StudentCourses)
+            {
+                <li>@sc.Course.Name</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p><em>No courses assigned</em></p>
+    }
+</div>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

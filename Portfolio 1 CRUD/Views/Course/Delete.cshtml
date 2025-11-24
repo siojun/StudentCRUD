@@ -1,0 +1,23 @@
+﻿@model Portfolio_1_CRUD.Models.CourseInformation
+
+@{
+    ViewData["Title"] = "Delete Course";
+}
+
+<h2>Delete Course</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete this course?
+</div>
+
+<ul class="list-group mb-3">
+    <li class="list-group-item"><strong>Name:</strong> @Model.Name</li>
+    <li class="list-group-item"><strong>Credits:</strong> @Model.Credits</li>
+</ul>
+
+<form asp-action="DeleteConfirmed" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
